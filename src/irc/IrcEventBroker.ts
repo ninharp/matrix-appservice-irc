@@ -304,7 +304,7 @@ export class IrcEventBroker {
             ));
         });
         connInst.addListener("notice", (from: string, to: string, text: string) => {
-            if (!from || to.startsWith("#") || to.startsWith("!")) { return; }
+            if (!from || (to.startsWith("#") || to.startsWith("!"))) { return; }
             const req = createRequest();
             // Check and drop here, because we want to avoid the performance impact.
             if (!IrcEventBroker.isValidNick(to)) {

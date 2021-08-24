@@ -426,7 +426,10 @@ export class IrcServer {
     }
 
     public get aliasTemplateHasHashPrefix() {
-        return this.config.dynamicChannels.aliasTemplate.startsWith("#");
+        if (this.config.dynamicChannels.aliasTemplate.startsWith("#") || this.config.dynamicChannels.aliasTemplate.startsWith("!")) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -636,7 +639,7 @@ export class IrcServer {
     }
 
     public getAliasFromChannel(channel: string) {
-        if ((!channel.startsWith("#") && !this.aliasTemplateHasHashPrefix) || !channel.startsWith("!")) {
+        if (((!channel.startsWith("#") || !channel.startsWith("!")) && !this.aliasTemplateHasHashPrefix)) {
             throw Error('Cannot get an alias for a channel not starting with a hash');
         }
         const alias = renderTemplate(this.config.dynamicChannels.aliasTemplate, {
