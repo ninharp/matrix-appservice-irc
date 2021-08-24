@@ -636,7 +636,7 @@ export class IrcServer {
     }
 
     public getAliasFromChannel(channel: string) {
-        if (!channel.startsWith("#") && !this.aliasTemplateHasHashPrefix) {
+        if ((!channel.startsWith("#") && !this.aliasTemplateHasHashPrefix) || !channel.startsWith("!")) {
             throw Error('Cannot get an alias for a channel not starting with a hash');
         }
         const alias = renderTemplate(this.config.dynamicChannels.aliasTemplate, {

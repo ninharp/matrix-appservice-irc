@@ -290,7 +290,7 @@ export class IrcEventBroker {
         // listen for PMs for clients. If you listen for rooms, you'll get
         // duplicates since the bot will also invoke the callback fn!
         connInst.addListener("message", (from: string, to: string, text: string) => {
-            if (to.startsWith("#")) { return; }
+            if (to.startsWith("#") || to.startsWith("!")) { return; }
             const req = createRequest();
             // Check and drop here, because we want to avoid the performance impact.
             if (!IrcEventBroker.isValidNick(to)) {
@@ -304,7 +304,7 @@ export class IrcEventBroker {
             ));
         });
         connInst.addListener("notice", (from: string, to: string, text: string) => {
-            if (!from || to.startsWith("#")) { return; }
+            if (!from || to.startsWith("#") || to.startsWith("!")) { return; }
             const req = createRequest();
             // Check and drop here, because we want to avoid the performance impact.
             if (!IrcEventBroker.isValidNick(to)) {
@@ -318,7 +318,7 @@ export class IrcEventBroker {
             ));
         });
         connInst.addListener("ctcp-privmsg", (from: string, to: string, text: string) => {
-            if (to.startsWith("#")) { return; }
+            if (to.startsWith("#") || to.startsWith("!")) { return; }
             if (text.startsWith("ACTION ")) {
                 const req = createRequest();
                 // Check and drop here, because we want to avoid the performance impact.
@@ -497,7 +497,7 @@ export class IrcEventBroker {
             ));
         });
         this.hookIfClaimed(client, connInst, "message", (from: string, to: string, text: string) => {
-            if (!to.startsWith("#")) { return; }
+            if (!to.startsWith("#") || !to.startsWith("!")) { return; }
             const req = createRequest();
             this.bufferRequestToChannel(to, () => {
                 return complete(req, ircHandler.onMessage(
@@ -507,7 +507,7 @@ export class IrcEventBroker {
             }, req);
         });
         this.hookIfClaimed(client, connInst, "ctcp-privmsg", function(from: string, to: string, text: string) {
-            if (!to.startsWith("#")) { return; }
+            if (!to.startsWith("#") || !to.startsWith("!")) { return; }
             if (text.startsWith("ACTION ")) {
                 const req = createRequest();
                 complete(req, ircHandler.onMessage(
@@ -517,7 +517,7 @@ export class IrcEventBroker {
             }
         });
         this.hookIfClaimed(client, connInst, "notice", (from: string, to: string, text: string) => {
-            if (!to.startsWith("#")) { return; }
+            if (!to.startsWith("#") || !to.startsWith("!")) { return; }
             if (!from) { // ignore server notices
                 return;
             }
@@ -529,7 +529,7 @@ export class IrcEventBroker {
             }, req);
         });
         this.hookIfClaimed(client, connInst, "topic", function(channel: string, topic: string, nick: string) {
-            if (!channel.startsWith("#")) { return; }
+            if (!channel.startsWith("#") || !channel.startsWith("!")) { return; }
 
             if (nick && nick.includes("@")) {
                 const match = nick.match(

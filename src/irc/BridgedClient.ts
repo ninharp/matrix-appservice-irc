@@ -447,7 +447,7 @@ export class BridgedClient extends EventEmitter {
         if (this.state.status !== BridgedClientStatus.CONNECTED) {
             return undefined; // we were never connected to the network.
         }
-        if (!channel.startsWith("#")) {
+        if (!channel.startsWith("#") || !channel.startsWith("!")) {
             return undefined; // PM room
         }
         const deferredChannelJoin = this.channelJoinDefers.get(channel);
@@ -488,7 +488,7 @@ export class BridgedClient extends EventEmitter {
             // we were never joined to it. We need to be joined to it to kick people.
             return Promise.resolve();
         }
-        if (!channel.startsWith("#")) {
+        if (!channel.startsWith("#") || !channel.startsWith("!")) {
             return Promise.resolve(); // PM room
         }
 
@@ -948,7 +948,7 @@ export class BridgedClient extends EventEmitter {
         if (Object.keys(this.state.client.chans).includes(channel)) {
             return Bluebird.resolve(new IrcRoom(this.server, channel));
         }
-        if (!channel.startsWith("#")) {
+        if (!channel.startsWith("#") || !channel.startsWith("!")) {
             // PM room
             return Bluebird.resolve(new IrcRoom(this.server, channel));
         }

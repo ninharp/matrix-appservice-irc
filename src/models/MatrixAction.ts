@@ -56,13 +56,6 @@ export interface MatrixMessageEvent {
             "m.in_reply_to"?: {
                 event_id: string;
             };
-            // edits
-            "rel_type"?: string;
-            "event_id": string;
-        };
-        "m.new_content"?: {
-            body: string;
-            msgtype: string;
         };
         body?: string;
         topic?: string;
